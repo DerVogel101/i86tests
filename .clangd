@@ -1,0 +1,4 @@
+CompileFlags:
+  Compiler: clang
+  Remove: [-march=i8086, -mcmodel=small]
+  Add: [-m16, -D__far=]

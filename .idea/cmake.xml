@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakeSharedSettings">
+    <configurations>
+      <configuration PROFILE_NAME="ia16" ENABLED="true" CONFIG_NAME="Release" GENERATION_OPTIONS="-DCMAKE_TOOLCHAIN_FILE=/home/vogel/intel8086_emulator_code/i86tests/cmake/ia16-toolchain.cmake -DCMAKE_C_COMPILER=/usr/bin/ia16-elf-gcc" />
+    </configurations>
+  </component>
+</project>
