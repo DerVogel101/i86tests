@@ -1,7 +1,9 @@
 SECTIONS {
-    . = 0xC0000;
-    .text : { KEEP(*(.text.entry)) *(.text*) }
+    /* Code symbols are CS-relative offsets; bytes still load at C000:0000. */
+    . = 0;
+    .text : AT(0xC0000) { KEEP(*(.text.entry)) *(.text*) }
 
+    ASSERT(SIZEOF(.text) <= 0x10000, "Small-model code exceeds one segment")
     .data 0x0600 : AT(LOADADDR(.text) + SIZEOF(.text)) {
         __data_start = .;
         *(.rodata*) *(.data*)

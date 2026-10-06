@@ -29,5 +29,32 @@ rom_start:
     hlt
     jmp 1b
 
+.section .text, "ax"
+.global irq_entry
+irq_entry:
+    push %ax
+    push %bx
+    push %cx
+    push %dx
+    push %si
+    push %di
+    push %bp
+    push %ds
+    push %es
+    xor %ax, %ax
+    mov %ax, %ds
+    mov %ax, %es
+    cld
+    call irq_service
+    pop %es
+    pop %ds
+    pop %bp
+    pop %di
+    pop %si
+    pop %dx
+    pop %cx
+    pop %bx
+    pop %ax
+    iret
 .section .reset, "ax"
     ljmp $0xC000, $0x0000

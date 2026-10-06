@@ -8,13 +8,18 @@ add_executable(rom main.c lib/hardware.c reset.S lib/strings.c
         lib/sleep.c
         lib/irq_handler.c
         lib/irq_handler.h)
-set_target_properties(rom PROPERTIES SUFFIX ".elf")
-target_compile_options(rom PRIVATE -march=i8086 -mcmodel=small -ffreestanding -fno-builtin -finput-charset=UTF-8 -fexec-charset=CP1252)
-target_link_options(rom PRIVATE -nostdlib "-T${CMAKE_CURRENT_SOURCE_DIR}/rom.ld")
-set_property(TARGET rom APPEND PROPERTY LINK_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/rom.ld")
+add_executable(irq_handler_test EXCLUDE_FROM_ALL
+        tests/irq_handler_test.c lib/irq_handler.c lib/hardware.c reset.S)
 
-add_custom_command(TARGET rom POST_BUILD
+foreach(rom_target IN ITEMS rom irq_handler_test)
+    set_target_properties(${rom_target} PROPERTIES SUFFIX ".elf")
+    target_compile_options(${rom_target} PRIVATE -march=i8086 -mcmodel=small -ffreestanding -fno-builtin -finput-charset=UTF-8 -fexec-charset=CP1252)
+    # Code and data have separate segments but overlapping logical offsets.
+    target_link_options(${rom_target} PRIVATE -nostdlib "-Wl,--no-check-sections" "-T${CMAKE_CURRENT_SOURCE_DIR}/rom.ld")
+    set_property(TARGET ${rom_target} APPEND PROPERTY LINK_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/rom.ld")
+    add_custom_command(TARGET ${rom_target} POST_BUILD
         COMMAND "${IA16_OBJCOPY}" -O binary --gap-fill=0xff --pad-to=0x100000
-                "$<TARGET_FILE:rom>" "${CMAKE_CURRENT_BINARY_DIR}/rom.bin"
-        BYPRODUCTS "${CMAKE_CURRENT_BINARY_DIR}/rom.bin"
+                "$<TARGET_FILE:${rom_target}>" "${CMAKE_CURRENT_BINARY_DIR}/${rom_target}.bin"
+        BYPRODUCTS "${CMAKE_CURRENT_BINARY_DIR}/${rom_target}.bin"
         VERBATIM)
+endforeach()
