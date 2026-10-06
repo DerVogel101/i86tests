@@ -1,6 +1,6 @@
 // string.h
 #pragma once
-#include "lib/hardware.h"
+#include "hardware.h"
 
 unsigned int str_len(const char* str);
 int str_equal(const char* a, const char* b);

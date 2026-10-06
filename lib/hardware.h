@@ -95,7 +95,9 @@ typedef enum {
     IRQ_DEVICE_REDSTONE = 0x00u,
     IRQ_DEVICE_SIGN = 0x01u,
     IRQ_DEVICE_REALTIMER = 0x02u,
-    IRQ_DEVICE_TICKTIMER = 0x03u
+    IRQ_DEVICE_TICKTIMER = 0x03u,
+    /* Keep the enum wide enough to reject invalid types before byte packing. */
+    IRQ_DEVICE_TYPE_INVALID = 0x100u
 } IrqDeviceType;
 
 static inline void enable_intr(void) {

@@ -1,5 +1,5 @@
-#include "../strings.h"
-#include "lib/hardware.h"
+#include "strings.h"
+#include "hardware.h"
 
 void uint16_to_str(uint16 value, char *buffer)
 {

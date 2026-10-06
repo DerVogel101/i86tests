@@ -1,5 +1,5 @@
 #include "lib/hardware.h"
-#include "strings.h"
+#include "lib/strings.h"
 
 static volatile unsigned char initialized = 0x42;
 static volatile char t = 'T';
