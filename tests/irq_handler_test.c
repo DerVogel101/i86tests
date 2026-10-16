@@ -1,5 +1,9 @@
 #include "../lib/irq_handler.h"
+#include "../lib/sleep.h"
 #include <stddef.h>
+
+/* Sleep commands 16..19 take wait/resolution at 051A/051C. Even commands
+ * use real time, odd commands ticks; 18/19 also check IF stays disabled. */
 
 /* Mailbox words at 0500: ready, error line, command, last ID, last route,
  * callback count, callback flags, completed commands, binding size, callback
@@ -150,6 +154,15 @@ void rom_main(void)
             case 11: __asm__ volatile ("int $0x20" ::: "memory"); break;
             case 14: CHECK(irq_register_type(&edge_type, (IrqDeviceType)255, on_type)); break;
             case 15: CHECK(irq_unregister(&edge_type)); break;
+            case 16:
+            case 17:
+            case 18:
+            case 19:
+                if (command >= 18) disable_intr();
+                sleep_realtime(MB[13], (uint8)MB[14], (command & 1) != 0);
+                CHECK(is_intr_enabled() == (command < 18));
+                enable_intr();
+                break;
             default: CHECK(false);
         }
         CHECK(is_intr_enabled());

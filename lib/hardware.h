@@ -49,9 +49,9 @@ typedef enum {
 #define SIGN_FORMAT_ITALIC ((uint8)0x40)
 #define SIGN_FORMAT_UNDERLINED ((uint8)0x80)
 
-#define SIGN_CONTROL_ALL ((uint8)0x0100)
-#define SIGN_CONTROL_FRONT ((uint8)0x0200)
-#define SIGN_CONTROL_BACK ((uint8)0x0400)
+#define SIGN_CONTROL_ALL ((uint16)0x0100)
+#define SIGN_CONTROL_FRONT ((uint16)0x0200)
+#define SIGN_CONTROL_BACK ((uint16)0x0400)
 
 #define IO_TIMER(id) ((uint16)(id) * 0x0008 + 0x8100)
 #define IO_TIMER_COUNTDOWN(id) ((uint16)(id) * 0x0008 + 0x8100)

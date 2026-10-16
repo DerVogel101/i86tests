@@ -13,29 +13,29 @@ void *memcpy(void *dest, const void *src, size_t count)
 
 void log_text(const char *text)
 {
-    for (uint16 port = IO_TERMINAL; port <= IO_TERMINAL + 0x1Eu; port += 2) {
-        uint8 low = 0;
-        uint8 high = 0;
+    do {
+        for (uint16 port = IO_TERMINAL; port <= IO_TERMINAL + 0x1Eu; port += 2) {
+            uint8 low = 0;
+            uint8 high = 0;
 
-        if (*text != '\0') {
-            low = (uint8)*text++;
+            if (*text != '\0') {
+                low = (uint8)*text++;
+            }
+            if (*text != '\0') {
+                high = (uint8)*text++;
+            }
+
+            const uint16 value = (uint16)low | ((uint16)high << 8);
+            out16(port, value);
         }
-
-        if (*text != '\0') {
-            high = (uint8)*text++;
-        }
-
-        const uint16 value = (uint16)low | ((uint16)high << 8);
-
-        out16(port, value);
-    }
-
-    out8(IO_TERMINAL_CONTROL, TERMINAL_CONTROL_SEND);
+        out8(IO_TERMINAL_CONTROL, TERMINAL_CONTROL_SEND);
+    } while (*text != '\0');
 }
 
 static uint16 clock_word(uint16 offset)
 {
-    return (uint16)CLOCK_BYTES[offset] | ((uint16)CLOCK_BYTES[offset + 1] << 8);
+    /* One 8086 word read cannot straddle host clock updates between instructions. */
+    return *(volatile uint16 __far *)(CLOCK_BYTES + offset);
 }
 
 Realtime get_realtime(void)

@@ -9,9 +9,11 @@ add_executable(rom main.c lib/hardware.c reset.S lib/strings.c
         lib/irq_handler.c
         lib/irq_handler.h)
 add_executable(irq_handler_test EXCLUDE_FROM_ALL
-        tests/irq_handler_test.c lib/irq_handler.c lib/hardware.c reset.S)
+        tests/irq_handler_test.c lib/irq_handler.c lib/hardware.c lib/sleep.c reset.S)
 
-foreach(rom_target IN ITEMS rom irq_handler_test)
+add_executable(self_test self_test.c lib/hardware.c lib/strings.c lib/irq_handler.c reset.S)
+
+foreach(rom_target IN ITEMS rom irq_handler_test self_test)
     set_target_properties(${rom_target} PROPERTIES SUFFIX ".elf")
     target_compile_options(${rom_target} PRIVATE -march=i8086 -mcmodel=small -ffreestanding -fno-builtin -finput-charset=UTF-8 -fexec-charset=CP1252)
     # Code and data have separate segments but overlapping logical offsets.
