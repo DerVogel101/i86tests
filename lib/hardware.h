@@ -129,6 +129,16 @@ typedef struct {
 Realtime get_realtime(void);
 TickTime get_tick_time(void);
 
+/* Give up the current batch. */
+static inline void i86_yield_batch(void) {
+    __asm__ volatile (".byte 0x0f, 0x00" ::: "memory");
+}
+
+/* Give up the rest of the current tick. */
+static inline void i86_yield_tick(void) {
+    __asm__ volatile (".byte 0x0f, 0x01" ::: "memory");
+}
+
 static inline void hlt(void) {
     __asm__ volatile ("hlt" ::: "memory");
 }
