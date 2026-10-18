@@ -7,15 +7,16 @@ add_executable(rom main.c lib/hardware.c reset.S lib/strings.c
         lib/sleep.h
         lib/sleep.c
         lib/irq_handler.c
-        lib/irq_handler.h lib/keyboard.c)
+        lib/irq_handler.h lib/keyboard.c lib/punchcard.c)
 add_executable(irq_handler_test EXCLUDE_FROM_ALL
         tests/irq_handler_test.c lib/irq_handler.c lib/hardware.c lib/keyboard.c lib/sleep.c reset.S)
 
 add_executable(self_test self_test.c lib/hardware.c lib/strings.c lib/irq_handler.c lib/keyboard.c reset.S)
 add_executable(keyboard_test EXCLUDE_FROM_ALL tests/keyboard_test.c lib/hardware.c lib/irq_handler.c lib/keyboard.c reset.S)
 add_executable(keyboard_editor keyboard_editor.c lib/hardware.c lib/irq_handler.c lib/keyboard.c reset.S)
+add_executable(punchcard_test EXCLUDE_FROM_ALL tests/punchcard_test.c lib/hardware.c lib/irq_handler.c lib/punchcard.c reset.S)
 
-foreach(rom_target IN ITEMS rom irq_handler_test self_test keyboard_test keyboard_editor)
+foreach(rom_target IN ITEMS rom irq_handler_test self_test keyboard_test keyboard_editor punchcard_test)
     set_target_properties(${rom_target} PROPERTIES SUFFIX ".elf")
     target_compile_options(${rom_target} PRIVATE -march=i8086 -mcmodel=small -ffreestanding -fno-builtin -finput-charset=UTF-8 -fexec-charset=CP1252)
     # Code and data have separate segments but overlapping logical offsets.

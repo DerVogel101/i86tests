@@ -2,6 +2,7 @@
 #include <stdbool.h>
 typedef unsigned char  uint8;
 typedef unsigned short uint16;
+typedef unsigned long uint32;
 typedef signed char  int8;
 typedef signed short int16;
 
@@ -99,12 +100,57 @@ typedef enum {
 #define KEYBOARD_ACK_PENDING ((uint8)0x01)
 #define KEYBOARD_READY ((uint8)0x02)
 
+#define PUNCHCARD_READER(slot) ((uint8)(slot))
+#define PUNCHCARD_WRITER(slot) ((uint8)(16u+(slot)))
+#define IO_PUNCHCARD(d) ((uint16)(0x8200u+(uint16)(d)*64u))
+#define IO_PUNCHCARD_DATA(d) IO_PUNCHCARD(d)
+#define IO_PUNCHCARD_COMMAND(d) ((uint16)(IO_PUNCHCARD(d)+0x20u))
+#define IO_PUNCHCARD_STATUS(d) ((uint16)(IO_PUNCHCARD(d)+0x21u))
+#define IO_PUNCHCARD_EVENTS(d) ((uint16)(IO_PUNCHCARD(d)+0x22u))
+#define IO_PUNCHCARD_ERROR(d) ((uint16)(IO_PUNCHCARD(d)+0x23u))
+#define IO_PUNCHCARD_CARDS(d) ((uint16)(IO_PUNCHCARD(d)+0x24u))
+#define IO_PUNCHCARD_REMAINING(d) ((uint16)(IO_PUNCHCARD(d)+0x26u))
+#define IO_PUNCHCARD_CARD(d) ((uint16)(IO_PUNCHCARD(d)+0x28u))
+#define IO_PUNCHCARD_ROW(d) ((uint16)(IO_PUNCHCARD(d)+0x2au))
+#define IO_PUNCHCARD_FLAGS(d) ((uint16)(IO_PUNCHCARD(d)+0x2bu))
+#define IO_PUNCHCARD_METADATA(d) ((uint16)(IO_PUNCHCARD(d)+0x2cu))
+#define PUNCHCARD_METADATA_NAME ((uint8)0)
+#define PUNCHCARD_METADATA_DESCRIPTION ((uint8)1)
+#define PUNCHCARD_FLAG_SEALED ((uint8)1)
+#define PUNCHCARD_FLAG_NAME_WRITTEN ((uint8)2)
+#define PUNCHCARD_FLAG_DESCRIPTION_WRITTEN ((uint8)4)
+#define PUNCHCARD_READ ((uint8)1)
+#define PUNCHCARD_WRITE ((uint8)2)
+#define PUNCHCARD_READ_NAME ((uint8)4)
+#define PUNCHCARD_WRITE_NAME ((uint8)8)
+#define PUNCHCARD_NEXT ((uint8)16)
+#define PUNCHCARD_EJECT ((uint8)32)
+#define PUNCHCARD_ACK ((uint8)64)
+#define PUNCHCARD_CLEAR_ERROR ((uint8)128)
+#define PUNCHCARD_CONNECTED ((uint8)1)
+#define PUNCHCARD_PRESENT ((uint8)2)
+#define PUNCHCARD_BUSY ((uint8)4)
+#define PUNCHCARD_READY ((uint8)8)
+#define PUNCHCARD_EOC ((uint8)16)
+#define PUNCHCARD_END ((uint8)32)
+#define PUNCHCARD_OUTPUT ((uint8)64)
+#define PUNCHCARD_ERROR ((uint8)128)
+#define PUNCHCARD_EVENT_INSERTED ((uint8)1)
+#define PUNCHCARD_EVENT_ROW ((uint8)2)
+#define PUNCHCARD_EVENT_NAME ((uint8)4)
+#define PUNCHCARD_EVENT_CARD ((uint8)8)
+#define PUNCHCARD_EVENT_EJECTED ((uint8)16)
+#define PUNCHCARD_EVENT_REMOVED ((uint8)32)
+#define PUNCHCARD_EVENT_ERROR ((uint8)64)
+
 typedef enum {
     IRQ_DEVICE_REDSTONE = 0x00u,
     IRQ_DEVICE_SIGN = 0x01u,
     IRQ_DEVICE_REALTIMER = 0x02u,
     IRQ_DEVICE_TICKTIMER = 0x03u,
     IRQ_DEVICE_KEYBOARD = 0x04u,
+    IRQ_DEVICE_PUNCHCARD_READER = 0x05u,
+    IRQ_DEVICE_PUNCHCARD_WRITER = 0x06u,
     /* Keep the enum wide enough to reject invalid types before byte packing. */
     IRQ_DEVICE_TYPE_INVALID = 0x100u
 } IrqDeviceType;
