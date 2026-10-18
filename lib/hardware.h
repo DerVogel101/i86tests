@@ -91,11 +91,20 @@ typedef enum {
 #define IRQ_CONTROL_EVENT_PENDING ((uint8)0x02)
 #define IRQ_CONTROL_OVERFLOW ((uint8)0x04)
 
+#define IO_KEYBOARD_DATA(slot) ((uint16)(0x8170u + (uint16)(slot) * 2u))
+#define IO_KEYBOARD_CONTROL(slot) ((uint16)(IO_KEYBOARD_DATA(slot) + 1u))
+#define KEYBOARD_SLOTS ((uint8)8)
+#define KEYBOARD_FIFO_CAPACITY ((uint8)8)
+#define KEYBOARD_ACK ((uint8)0x01)
+#define KEYBOARD_ACK_PENDING ((uint8)0x01)
+#define KEYBOARD_READY ((uint8)0x02)
+
 typedef enum {
     IRQ_DEVICE_REDSTONE = 0x00u,
     IRQ_DEVICE_SIGN = 0x01u,
     IRQ_DEVICE_REALTIMER = 0x02u,
     IRQ_DEVICE_TICKTIMER = 0x03u,
+    IRQ_DEVICE_KEYBOARD = 0x04u,
     /* Keep the enum wide enough to reject invalid types before byte packing. */
     IRQ_DEVICE_TYPE_INVALID = 0x100u
 } IrqDeviceType;

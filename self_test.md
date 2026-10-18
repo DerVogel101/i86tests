@@ -3,7 +3,9 @@
 `self_test.c` is a separate program beside `main.c`. The normal build produces
 both `build/rom.bin` and `build/self_test.bin`; each is a 256 KiB ROM with the
 existing reset vector and small-model startup. Burn **self_test.bin** to run
-the diagnostic. `main.c` is unchanged.
+the diagnostic. `main.c` is unchanged. The normal build also produces
+`build/keyboard_editor.bin`, a separate [keyboard sign editor](keyboard_editor.md)
+using keyboard slot 0 and sign IDs 1 (text) and 2 (status).
 
 ## Build
 
